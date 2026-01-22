@@ -1,4 +1,4 @@
-from app.booking_flow import (
+from booking_flow import (
     initialize_booking_state,
     next_question,
     update_state_from_input,
@@ -7,7 +7,7 @@ from app.booking_flow import (
     HELP_TEXT,
     validate_field,
 )
-from app.tools import save_booking_tool, email_tool
+from tools import save_booking_tool, email_tool
 
 MAX_MEMORY = 25
 
@@ -299,3 +299,4 @@ def handle_user_message(state: dict, user_input: str):
     state["awaiting_confirmation"] = True
     add_message(state, "assistant", summary)
     return summary
+
