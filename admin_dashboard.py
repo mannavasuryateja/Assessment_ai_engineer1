@@ -1,5 +1,5 @@
 import streamlit as st
-from db.database import get_all_bookings
+from database import get_all_bookings
 
 
 def render_admin_dashboard():
@@ -12,3 +12,4 @@ def render_admin_dashboard():
         return
 
     st.dataframe(bookings)
+
