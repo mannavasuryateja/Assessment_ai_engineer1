@@ -9,17 +9,15 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
-import streamlit as st
-
-embeddings = GoogleGenerativeAIEmbeddings(
-    model="models/embedding-001",
-    google_api_key=st.secrets["GEMINI_API_KEY"]
-)
 
 
 # -----------------------------------
 # Configure Gemini (OFFICIAL SDK)
 # -----------------------------------
+if "GEMINI_API_KEY" not in st.secrets:
+    st.error("GEMINI_API_KEY not found in Streamlit secrets")
+    st.stop()
+
 genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
 
@@ -38,7 +36,8 @@ def ingest_pdfs(uploaded_files: List):
             os.remove(tmp_path)
 
     if not documents:
-        raise ValueError("No text extracted from PDFs")
+        st.warning("No text extracted from uploaded PDFs.")
+        return None
 
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=700,
@@ -47,9 +46,10 @@ def ingest_pdfs(uploaded_files: List):
 
     chunks = splitter.split_documents(documents)
 
-    # ✅ LOCAL EMBEDDINGS (NO QUOTA / NO API)
-    embeddings = HuggingFaceEmbeddings(
-        model_name="sentence-transformers/all-MiniLM-L6-v2"
+    # ✅ CLOUD-SAFE EMBEDDINGS (Gemini)
+    embeddings = GoogleGenerativeAIEmbeddings(
+        model="models/embedding-001",
+        google_api_key=st.secrets["GEMINI_API_KEY"]
     )
 
     return FAISS.from_documents(chunks, embeddings)
@@ -77,9 +77,7 @@ Question:
 {query}
 """
 
-    # ✅ THE ONLY MODEL THAT WORKS FOR YOU
     model = genai.GenerativeModel("gemini-2.5-flash")
     response = model.generate_content(prompt)
 
     return response.text
-
