@@ -8,7 +8,13 @@ import google.generativeai as genai
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
+import streamlit as st
+
+embeddings = GoogleGenerativeAIEmbeddings(
+    model="models/embedding-001",
+    google_api_key=st.secrets["GEMINI_API_KEY"]
+)
 
 
 # -----------------------------------
@@ -76,3 +82,4 @@ Question:
     response = model.generate_content(prompt)
 
     return response.text
+
