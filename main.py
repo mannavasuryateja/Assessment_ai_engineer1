@@ -10,9 +10,9 @@ if ROOT_DIR not in sys.path:
 
 import streamlit as st
 
-from app.chat_logic import initialize_chat_state, handle_user_message
-from app.rag_pipeline import ingest_pdfs, rag_answer
-from app.admin_dashboard import render_admin_dashboard
+from chat_logic import initialize_chat_state, handle_user_message
+from rag_pipeline import ingest_pdfs, rag_answer
+from admin_dashboard import render_admin_dashboard
 
 
 # ----------------------------
@@ -91,3 +91,4 @@ if user_input:
 
     with st.chat_message("assistant"):
         st.write(response)
+
