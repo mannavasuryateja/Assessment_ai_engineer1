@@ -1,8 +1,8 @@
-from db.database import (
+from database import (
     insert_customer,
     insert_booking,
 )
-from app.email_service import send_confirmation_email
+from email_service import send_confirmation_email
 
 
 def save_booking_tool(booking_state: dict):
@@ -31,3 +31,4 @@ def email_tool(email: str, booking_id: str, booking_state: dict):
         booking_id=booking_id,
         booking_state=booking_state,
     )
+
